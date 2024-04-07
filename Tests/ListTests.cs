@@ -184,6 +184,7 @@ public class ListTests
     [Fact]
     public void CopyTo_FilledListAndCopyDataFromDestinationIndexToArray_CopiedDataToArray()
     {
+        int destinationIndex = 4;
         var list = new List<int>()
         {
             6, 7, 8, 9
@@ -194,7 +195,7 @@ public class ListTests
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         };
 
-        list.CopyTo(result, 4);
+        list.CopyTo(result, destinationIndex);
 
         var expect = new int[]
         {
@@ -204,6 +205,10 @@ public class ListTests
         for (int i = 0; i < expect.Length; i++)
         {
             Assert.True(expect[i] == result[i]);
+        }
+        for (int i = 0; i < list.Count; i++)
+        {
+            Assert.True(result[destinationIndex + i] == list[i]);
         }
     }
 }

@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PiligrimmList\PiligrimmList.csproj" />
+    <ProjectReference Include="..\Structures\Structures.csproj" />
   </ItemGroup>
 
 </Project>
