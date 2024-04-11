@@ -23,12 +23,11 @@ public class Stack<T> : IEnumerable<T>, ICollection
 
     public void CopyTo(Array array, int index)
     {
-        array.
-        Node? _currentNode = null;
-        for (int i = 0; i < _count; i++)
+        var stackEnumerator = GetEnumerator();
+        
+        for (int i = 0; stackEnumerator.MoveNext(); i++)
         {
-            _currentNode = _currentNode is null ? currentNode : _currentNode.Previous;
-            array[index + i] = _currentNode.Data;
+            array.SetValue(stackEnumerator.Current, index + i);
         }
     }
 
@@ -81,7 +80,7 @@ public class Stack<T> : IEnumerable<T>, ICollection
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-        yield return currentNode is null ? default : currentNode.Data;
+        return GetEnumerator();
     }
 
     private class Node
