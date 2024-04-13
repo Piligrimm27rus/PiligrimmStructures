@@ -52,9 +52,6 @@ public class Stack<T> : IEnumerable<T>, ICollection
         T data = currentNode.Data;
         currentNode = currentNode?.Previous;
         _count--;
-        // if (currentNode.Previous is null)
-        //     currentNode = null;
-        // else currentNode = currentNode.Previous;
 
 
         return data;
