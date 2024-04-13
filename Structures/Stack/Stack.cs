@@ -23,6 +23,13 @@ public class Stack<T> : IEnumerable<T>, ICollection
 
     public void CopyTo(Array array, int index)
     {
+        if (array.Length < _count)
+            throw new ArgumentException("CopyTo method. Destination array was not long enough.");
+        
+        if (array.Length < index || array.Length - index < _count)
+            throw new ArgumentException("CopyTo method. Destination index was long enough then array length.");
+
+
         var stackEnumerator = GetEnumerator();
         
         for (int i = 0; stackEnumerator.MoveNext(); i++)
@@ -74,7 +81,9 @@ public class Stack<T> : IEnumerable<T>, ICollection
         {
             _currentNode = _currentNode is null ? currentNode : _currentNode.Previous;
 
+            #pragma warning disable CS8602 // Dereference of a possibly null reference.
             yield return _currentNode.Data;
+            #pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
     }
 
