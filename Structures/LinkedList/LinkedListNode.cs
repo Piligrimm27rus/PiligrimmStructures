@@ -1,4 +1,4 @@
-namespace Piligrimm;
+namespace Piligrimm.Structures;
 
 public class LinkedListNode<T>
 {

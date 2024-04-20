@@ -1,14 +1,23 @@
-namespace Piligrimm.LinkedList.Tests;
+namespace Piligrimm.Structures.Tests;
 
 public class LinkedList
 {
     [Fact]
     private void AddByContructor_EmptyLinkedList_CreatedLinkedList()
     {
-        string[] input = ["the", "fox", "jumps", "over", "the", "dog"];
+        var input = Enumerable.Range(0, 10).ToArray();
+        var linkedList = new LinkedList<int>(input);
 
-        var actual = new LinkedList<string>(input);
-        string[] expect = ["the", "fox", "jumps", "over", "the", "dog"];
+        LinkedListNode<int>? current = linkedList.First;
+        List<int> actual = new List<int>();
+
+        do
+        {
+            actual.Add(current.Value);
+            current = current.Next;
+        } while (current != null);
+
+        var expect = Enumerable.Range(0, 10);
 
         expect.Should().BeEquivalentTo(actual);
     }
@@ -74,22 +83,55 @@ public class LinkedList
     }
 
     [Fact]
-    private void A()
+    private void FindLast_ChangeFoundData_ProperDataShouldBeChanged()
     {
-        var input = Enumerable.Range(0, 10).ToArray();
-        var actual1 = new LinkedList<int>(input);
+        string[] input = ["the", "fox", "jumps", "over", "the", "dog", "yesterday"];
 
-        List<int> actual = new List<int>();
+        var actual = new LinkedList<string>(input);
+        var current = actual.FindLast("the");
+        current.Value = $"({current.Value})";
 
-        LinkedListNode<int>? current = actual1.First;
+        string[] expect = ["the", "fox", "jumps", "over", "(the)", "dog", "yesterday"];
+
+        expect.Should().BeEquivalentTo(actual);
+    }
+
+    [Fact]
+    private void AddAfter_AddTwoValuesAtMiddle_AddedValuesAndOrderFromStartCorrect()
+    {
+        string[] input = ["the", "fox", "jumps", "over", "the", "dog", "yesterday"];
+
+        var actual = new LinkedList<string>(input);
+
+        var current = actual.FindLast("the");
+        actual.AddAfter(current, "old");
+        actual.AddAfter(current, "lazy");
+
+        string[] expect = ["the", "fox", "jumps", "over", "the", "lazy", "old", "dog", "yesterday"];
+
+        expect.Should().BeEquivalentTo(actual);
+    }
+
+    [Fact]
+    private void AddAfter_AddTwoValuesAtEnd_AddedValuesAndOrderFromEndCorrect()
+    {
+        string[] input = ["one", "two", "three"];
+
+        var linkedList = new LinkedList<string>(input);
+
+        var elem = linkedList.FindLast("three");
+        linkedList.AddAfter(elem, "five");
+        linkedList.AddAfter(elem, "four");
+
+        var current = linkedList.Last;
+        var actual = new List<string>();
         do
         {
             actual.Add(current.Value);
-
-            current = current.Next;
+            current = current.Previous;
         } while (current != null);
 
-        var expect = Enumerable.Range(0, 10);
+        string[] expect = ["five", "four", "three", "two", "one"];
 
         expect.Should().BeEquivalentTo(actual);
     }

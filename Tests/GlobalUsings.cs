@@ -1,3 +1,3 @@
 global using Xunit;
-global using Piligrimm;
+global using Piligrimm.Structures;
 global using FluentAssertions;

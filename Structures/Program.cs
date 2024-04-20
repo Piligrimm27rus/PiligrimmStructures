@@ -1,10 +1,11 @@
 using System.Text;
+using Piligrimm.Structures;
 
 System.Console.WriteLine("MY_STRUCTURES");
 
 // Create the link list.
 string[] words = ["the", "fox", "jumps", "over", "the", "dog"];
-Piligrimm.LinkedList<string> sentence = new Piligrimm.LinkedList<string>(words);
+Piligrimm.Structures.LinkedList<string> sentence = new Piligrimm.Structures.LinkedList<string>(words);
 Display(sentence, "The linked list values:");
 
 // Add the word 'today' to the beginning of the linked list.
@@ -12,7 +13,7 @@ sentence.AddFirst("today");
 Display(sentence, "Test 1: Add 'today' to beginning of the list:");
 
 // Move the first node to be the last node.
-Piligrimm.LinkedListNode<string> mark1 = sentence.First;
+Piligrimm.Structures.LinkedListNode<string> mark1 = sentence.First;
 sentence.RemoveFirst();
 sentence.AddLast(mark1);
 Display(sentence, "Test 2: Move first node to be last node:");
@@ -30,13 +31,13 @@ Display(sentence, "Test 4: Move last node to be first node:");
 
 // Indicate the last occurence of 'the'.
 sentence.RemoveFirst();
-Piligrimm.LinkedListNode<string> current = sentence.FindLast("the");
+Piligrimm.Structures.LinkedListNode<string> current = sentence.FindLast("the");
 IndicateNode(current, "Test 5: Indicate last occurence of 'the':");
 
-// // Add 'lazy' and 'old' after 'the' (the Piligrimm.LinkedListNode named current).
-// sentence.AddAfter(current, "old");
-// sentence.AddAfter(current, "lazy");
-// IndicateNode(current, "Test 6: Add 'lazy' and 'old' after 'the':");
+// Add 'lazy' and 'old' after 'the' (the Piligrimm.Structures.LinkedListNode named current).
+sentence.AddAfter(current, "old");
+sentence.AddAfter(current, "lazy");
+IndicateNode(current, "Test 6: Add 'lazy' and 'old' after 'the':");
 
 // // Indicate 'fox' node.
 // current = sentence.Find("fox");
@@ -50,7 +51,7 @@ IndicateNode(current, "Test 5: Indicate last occurence of 'the':");
 // // Keep a reference to the current node, 'fox',
 // // and to the previous node in the list. Indicate the 'dog' node.
 // mark1 = current;
-// Piligrimm.LinkedListNode<string> mark2 = current.Previous;
+// Piligrimm.Structures.LinkedListNode<string> mark2 = current.Previous;
 // current = sentence.Find("dog");
 // IndicateNode(current, "Test 9: Indicate the 'dog' node:");
 
@@ -118,7 +119,7 @@ IndicateNode(current, "Test 5: Indicate last occurence of 'the':");
 // Console.ReadLine();
 
 
-static void Display(Piligrimm.LinkedList<string> words, string test)
+static void Display(Piligrimm.Structures.LinkedList<string> words, string test)
 {
     Console.WriteLine(test);
     foreach (string word in words)
@@ -129,10 +130,10 @@ static void Display(Piligrimm.LinkedList<string> words, string test)
     Console.WriteLine();
 }
 
-static void IndicateNode(Piligrimm.LinkedListNode<string> node, string test)
+static void IndicateNode(Piligrimm.Structures.LinkedListNode<string> node, string test)
 {
     StringBuilder result = new StringBuilder("(" + node.Value + ")");
-    Piligrimm.LinkedListNode<string> nodeP = node.Previous;
+    Piligrimm.Structures.LinkedListNode<string> nodeP = node.Previous;
 
     while (nodeP != null)
     {

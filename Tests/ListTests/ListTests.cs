@@ -1,4 +1,4 @@
-namespace Piligrimm.List.Tests;
+namespace Piligrimm.Structures.Tests;
 
 public class ListTests
 {

@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Piligrimm;
+namespace Piligrimm.Structures;
 
 public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnumerable
 {
@@ -60,6 +60,19 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
         _count++;
     }
 
+    public void AddAfter(LinkedListNode<T> node, T item)
+    {
+        var newNode = new LinkedListNode<T>(item);
+        var next = node.Next;
+
+        if (node.Next is null
+        node.Next = newNode;
+        next.Previous = newNode;
+        newNode.Next = next;
+
+        _count++;
+    }
+
     public void RemoveLast()
     {
         _lastNode = _lastNode.Previous;
@@ -85,9 +98,9 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
 
         LinkedListNode<T>? current = null;
 
-        for (int i = _count; i >= 0; i--)
+        for (int i = _count; i > 0; i--)
         {
-            current = current == null ? _lastNode : _lastNode.Previous;
+            current = current == null ? _lastNode : current.Previous;
             if (item.Equals(current.Value))
             {
                 return current;
