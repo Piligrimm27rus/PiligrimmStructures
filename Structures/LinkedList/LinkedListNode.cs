@@ -5,10 +5,10 @@ public class LinkedListNode<T>
     public LinkedListNode<T>? Next;
     public LinkedListNode<T>? Previous;
 
-    public T Data;
+    public T Value;
 
-    public LinkedListNode(T data)
+    public LinkedListNode(T value)
     {
-        Data = data;
+        Value = value;
     }
 }
