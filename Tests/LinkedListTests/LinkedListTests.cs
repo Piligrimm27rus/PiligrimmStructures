@@ -116,23 +116,70 @@ public class LinkedList
     private void AddAfter_AddTwoValuesAtEnd_AddedValuesAndOrderFromEndCorrect()
     {
         string[] input = ["one", "two", "three"];
-
         var linkedList = new LinkedList<string>(input);
 
         var elem = linkedList.FindLast("three");
         linkedList.AddAfter(elem, "five");
         linkedList.AddAfter(elem, "four");
 
-        var current = linkedList.Last;
-        var actual = new List<string>();
-        do
-        {
-            actual.Add(current.Value);
-            current = current.Previous;
-        } while (current != null);
+        var actual = LinkedListToList(linkedList, false);
 
         string[] expect = ["five", "four", "three", "two", "one"];
 
         expect.Should().BeEquivalentTo(actual);
+    }
+
+    [Fact]
+    private void Find_FindSomeDataFromFirstAndChange_DataWasFoundAndChanged()
+    {
+        string[] input = ["one", "two", "three"];
+        var actual = new LinkedList<string>(input);
+
+        var nodeOne = actual.Find("one");
+        nodeOne.Value = $"({nodeOne.Value})";
+
+        var nodeTwo = actual.Find("two");
+        nodeTwo.Value = $"({nodeTwo.Value})";
+
+        var nodeThree = actual.Find("three");
+        nodeThree.Value = $"({nodeThree.Value})";
+
+        string[] expect = ["(one)", "(two)", "(three)"];
+
+        expect.Should().BeEquivalentTo(actual);
+    }
+
+    [Fact]
+    private void AddBefore_AddTwoValuesAtStart_AddedValuesAndOrderFromStartCorrect()
+    {
+        string[] input = ["three", "four", "five"];
+        var linkedList = new LinkedList<string>(input);
+
+        var elem = linkedList.FindLast("three");
+        linkedList.AddAfter(elem, "one");
+        linkedList.AddAfter(elem, "two");
+
+        var actualForward = LinkedListToList(linkedList);
+        var actualReversed = LinkedListToList(linkedList, false);
+
+        string[] expectForward = ["one", "two", "three", "four", "five"];
+        string[] expectReversed = expectForward.Reverse().ToArray();
+
+        expectForward.Should().BeEquivalentTo(actualForward);
+        expectReversed.Should().BeEquivalentTo(actualReversed);
+    }
+
+    List<T> LinkedListToList<T>(LinkedList<T> linkedList, bool isForward = true)
+    {
+        var current = isForward ? linkedList.First : linkedList.Last;
+
+        var actual = new List<T>();
+        do
+        {
+            actual.Add(current.Value);
+            current = isForward ? current.Next : current.Previous;
+        } while (current != null);
+
+        return actual;
     }
 }

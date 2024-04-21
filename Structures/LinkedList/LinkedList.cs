@@ -26,12 +26,15 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
 
     public void Add(T item)
     {
-        if (_firstNode is null || _lastNode is null)
+        if (_firstNode is null && _lastNode is null)
         {
             _firstNode = _lastNode = new LinkedListNode<T>(item);
-
-            _firstNode.Next = _lastNode;
+        }
+        else if (_firstNode == _lastNode)
+        {
+            _lastNode = new LinkedListNode<T>(item);
             _lastNode.Previous = _firstNode;
+            _firstNode.Next = _lastNode;
         }
         else
         {
@@ -60,28 +63,51 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
         _count++;
     }
 
-    public void AddAfter(LinkedListNode<T> node, T item)
-    {
-        var newNode = new LinkedListNode<T>(item);
-        var next = node.Next;
+    public void AddAfter(LinkedListNode<T> node, T item) => AddAfter(node, new LinkedListNode<T>(item));
 
-        if (node.Next is null
-        node.Next = newNode;
-        next.Previous = newNode;
-        newNode.Next = next;
+    public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> newNode)
+    {
+        // если последняя нода
+        if (node.Next == null)
+        {
+            node.Next = newNode;
+            newNode.Previous = node;
+            _lastNode = newNode;
+        }
+        // если в середине
+        else
+        {
+            var next = node.Next;
+
+            node.Next = newNode;
+            newNode.Next = next;
+            newNode.Previous = node;
+            next.Previous = newNode;
+        }
 
         _count++;
     }
 
-    public void RemoveLast()
-    {
-        _lastNode = _lastNode.Previous;
-        _count--;
-    }
+    public void AddBefore(LinkedListNode<T> node, T item) => AddBefore(node, new LinkedListNode<T>(item));
 
-    public void RemoveFirst()
+    public void AddBefore(LinkedListNode<T> node, LinkedListNode<T> newNode)
     {
-        _firstNode = _firstNode.Next;
+
+        if (node.Previous == null)
+        {
+            node.Previous = newNode;
+            newNode.Next = node;
+            _firstNode = newNode;
+        }
+        else
+        {
+            var previous = node.Previous;
+
+            node.Previous = newNode;
+            newNode.Previous = previous;
+            newNode.Next = node;
+            previous.Next = newNode;
+        }
         _count--;
     }
 
@@ -107,6 +133,20 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
             }
         }
 
+        return null;
+    }
+
+    public LinkedListNode<T>? Find(T item)
+    {
+        if (item is null) return null;
+
+        LinkedListNode<T>? current = null;
+
+        for (int i = 0; i < _count; i++)
+        {
+            current = current == null ? _lastNode : current.Previous;
+            if (item.Equals(current.Value)) return current;
+        }
         return null;
     }
 
@@ -144,9 +184,35 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
         }
     }
 
+    public void RemoveLast()
+    {
+        _lastNode = _lastNode.Previous;
+        _count--;
+    }
+
+    public void RemoveFirst()
+    {
+        _firstNode = _firstNode.Next;
+        _count--;
+    }
+
+    public bool Remove(LinkedListNode<T> node) => Remove(node.Value);
+
     public bool Remove(T item)
     {
-        throw new NotImplementedException();
+        // FIXME PLS
+        var node = Find(item);
+        if (node is null) return false;
+
+        if (node == First) RemoveFirst();
+        else if (node == Last) RemoveLast();
+        else
+        {
+            node.Previous.Next = node.Next;
+            node.Next.Previous = node.Previous;
+        }
+
+        return true;
     }
 
     IEnumerator IEnumerable.GetEnumerator()
