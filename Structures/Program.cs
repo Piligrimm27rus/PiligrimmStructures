@@ -9,8 +9,7 @@ public class Example
     public static void Main()
     {
         // Create the link list.
-        string[] words =
-            { "the", "fox", "jumps", "over", "the", "dog" };
+        string[] words = { "the", "fox", "jumps", "over", "the", "dog" };
         Piligrimm.Structures.LinkedList<string> sentence = new Piligrimm.Structures.LinkedList<string>(words);
         Display(sentence, "The linked list values:");
 
@@ -61,17 +60,6 @@ public class Example
         current = sentence.Find("dog");
         IndicateNode(current, "Test 9: Indicate the 'dog' node:");
 
-        // The AddBefore method throws an InvalidOperationException
-        // if you try to add a node that already belongs to a list.
-        Console.WriteLine("Test 10: Throw exception by adding node (fox) already in the list:");
-        try
-        {
-            sentence.AddBefore(current, mark1);
-        }
-        catch (InvalidOperationException ex)
-        {
-            Console.WriteLine("Exception message: {0}", ex.Message);
-        }
         Console.WriteLine();
 
         // Remove the node referred to by mark1, and then add it

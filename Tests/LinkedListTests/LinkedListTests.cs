@@ -20,6 +20,7 @@ public class LinkedList
         var expect = Enumerable.Range(0, 10);
 
         expect.Should().BeEquivalentTo(actual);
+        Assert.Equal(expect.Count(), actual.Count);
     }
 
     [Fact]
@@ -33,6 +34,7 @@ public class LinkedList
         string[] expect = ["today", "the", "fox", "jumps", "over", "the", "dog"];
 
         expect.Should().BeEquivalentTo(actual);
+        Assert.Equal(expect.Length, actual.Count);
     }
 
     [Fact]
@@ -49,6 +51,7 @@ public class LinkedList
         string[] expect = ["the", "fox", "jumps", "over", "the", "dog", "today"];
 
         expect.Should().BeEquivalentTo(actual);
+        Assert.Equal(expect.Length, actual.Count);
     }
 
     [Fact]
@@ -64,6 +67,7 @@ public class LinkedList
         string[] expect = ["the", "fox", "jumps", "over", "the", "dog", "yesterday"];
 
         expect.Should().BeEquivalentTo(actual);
+        Assert.Equal(expect.Length, actual.Count);
     }
 
     [Fact]
@@ -80,6 +84,7 @@ public class LinkedList
         string[] expect = ["yesterday", "the", "fox", "jumps", "over", "the", "dog"];
 
         expect.Should().BeEquivalentTo(actual);
+        Assert.Equal(expect.Length, actual.Count);
     }
 
     [Fact]
@@ -94,6 +99,7 @@ public class LinkedList
         string[] expect = ["the", "fox", "jumps", "over", "(the)", "dog", "yesterday"];
 
         expect.Should().BeEquivalentTo(actual);
+        Assert.Equal(expect.Length, actual.Count);
     }
 
     [Fact]
@@ -110,6 +116,7 @@ public class LinkedList
         string[] expect = ["the", "fox", "jumps", "over", "the", "lazy", "old", "dog", "yesterday"];
 
         expect.Should().BeEquivalentTo(actual);
+        Assert.Equal(expect.Length, actual.Count);
     }
 
     [Fact]
@@ -127,6 +134,7 @@ public class LinkedList
         string[] expect = ["five", "four", "three", "two", "one"];
 
         expect.Should().BeEquivalentTo(actual);
+        Assert.Equal(expect.Length, actual.Count);
     }
 
     [Fact]
@@ -147,6 +155,7 @@ public class LinkedList
         string[] expect = ["(one)", "(two)", "(three)"];
 
         expect.Should().BeEquivalentTo(actual);
+        Assert.Equal(expect.Length, actual.Count);
     }
 
     [Fact]
@@ -167,6 +176,75 @@ public class LinkedList
 
         expectForward.Should().BeEquivalentTo(actualForward);
         expectReversed.Should().BeEquivalentTo(actualReversed);
+        Assert.Equal(expectForward.Length, actualForward.Count);
+    }
+
+    [Fact]
+    private void Remove_RemoveMiddle_NodeWasRemovedAndOrderCorrect()
+    {
+        string[] input = ["one", "two", "three"];
+        var linkedList = new LinkedList<string>(input);
+
+        linkedList.Remove("two");
+
+        var actualForward = LinkedListToList(linkedList);
+        var actualReversed = LinkedListToList(linkedList, false);
+
+        string[] expectForward = ["one", "three"];
+        string[] expectReversed = expectForward.Reverse().ToArray();
+
+        expectForward.Should().BeEquivalentTo(actualForward);
+        expectReversed.Should().BeEquivalentTo(actualReversed);
+        Assert.Equal(expectForward.Length, actualForward.Count);
+    }
+
+    [Fact]
+    private void Remove_RemoveStart_NodeWasRemovedAndOrderCorrect()
+    {
+        string[] input = ["one", "two", "three"];
+        var linkedList = new LinkedList<string>(input);
+
+        linkedList.Remove("one");
+
+        var actualForward = LinkedListToList(linkedList);
+        var actualReversed = LinkedListToList(linkedList, false);
+
+        string[] expectForward = ["two", "three"];
+        string[] expectReversed = expectForward.Reverse().ToArray();
+
+        expectForward.Should().BeEquivalentTo(actualForward);
+        expectReversed.Should().BeEquivalentTo(actualReversed);
+        Assert.Equal(expectForward.Length, actualForward.Count);
+    }
+
+    [Fact]
+    private void Remove_RemoveEnd_NodeWasRemovedAndOrderCorrect()
+    {
+        string[] input = ["one", "two", "three"];
+        var linkedList = new LinkedList<string>(input);
+
+        linkedList.Remove("three");
+
+        var actualForward = LinkedListToList(linkedList);
+        var actualReversed = LinkedListToList(linkedList, false);
+
+        string[] expectForward = ["one", "two"];
+        string[] expectReversed = expectForward.Reverse().ToArray();
+
+        expectForward.Should().BeEquivalentTo(actualForward);
+        expectReversed.Should().BeEquivalentTo(actualReversed);
+        Assert.Equal(expectForward.Length, actualForward.Count);
+    }
+
+    [Fact]
+    private void Clear_ClearAllThenCheckIfDataContains_DataNotContains()
+    {
+        var input = Enumerable.Range(0, 10).ToArray();
+        var actual = new LinkedList<int>(input);
+
+        actual.Clear();
+
+        Assert.DoesNotContain(5, actual);
     }
 
     List<T> LinkedListToList<T>(LinkedList<T> linkedList, bool isForward = true)

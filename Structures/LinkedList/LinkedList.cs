@@ -56,8 +56,8 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
         var newNode = new LinkedListNode<T>(item);
 
         newNode.Next = _firstNode;
-        _firstNode.Previous = newNode;
 
+        _firstNode.Previous = newNode;
         _firstNode = newNode;
 
         _count++;
@@ -67,21 +67,22 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
 
     public void AddAfter(LinkedListNode<T> node, LinkedListNode<T> newNode)
     {
-        // если последняя нода
         if (node.Next == null)
         {
-            node.Next = newNode;
+            newNode.Next = null;
             newNode.Previous = node;
+
+            node.Next = newNode;
             _lastNode = newNode;
         }
-        // если в середине
         else
         {
             var next = node.Next;
 
-            node.Next = newNode;
             newNode.Next = next;
             newNode.Previous = node;
+
+            node.Next = newNode;
             next.Previous = newNode;
         }
 
@@ -103,12 +104,13 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
         {
             var previous = node.Previous;
 
-            node.Previous = newNode;
             newNode.Previous = previous;
             newNode.Next = node;
+
+            node.Previous = newNode;
             previous.Next = newNode;
         }
-        _count--;
+        _count++;
     }
 
     public void AddLast(LinkedListNode<T> node) => AddLast(node.Value);
@@ -144,7 +146,7 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
 
         for (int i = 0; i < _count; i++)
         {
-            current = current == null ? _lastNode : current.Previous;
+            current = current == null ? _firstNode : current.Next;
             if (item.Equals(current.Value)) return current;
         }
         return null;
@@ -160,9 +162,17 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
 
     public bool Contains(T item)
     {
-        // for (int i = 0;)
+        var linkedListEnumerator = GetEnumerator();
+
+        for (int i = 0; linkedListEnumerator.MoveNext(); i++)
+        {
+            if (linkedListEnumerator.Current.Equals(item)) return true;
+        }
+
         return false;
     }
+
+    public void CopyTo(T[] array, int arrayIndex) => CopyTo(array as Array, arrayIndex);
 
     public void CopyTo(Array array, int index)
     {
@@ -174,25 +184,18 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
         }
     }
 
-    public void CopyTo(T[] array, int arrayIndex)
-    {
-        var linkedListEnumerator = GetEnumerator();
-
-        for (int i = 0; linkedListEnumerator.MoveNext(); i++)
-        {
-            array.SetValue(linkedListEnumerator.Current, arrayIndex + i);
-        }
-    }
 
     public void RemoveLast()
     {
         _lastNode = _lastNode.Previous;
+        _lastNode.Next = null;
         _count--;
     }
 
     public void RemoveFirst()
     {
         _firstNode = _firstNode.Next;
+        _firstNode.Previous = null;
         _count--;
     }
 
@@ -200,16 +203,20 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
 
     public bool Remove(T item)
     {
-        // FIXME PLS
         var node = Find(item);
         if (node is null) return false;
 
-        if (node == First) RemoveFirst();
-        else if (node == Last) RemoveLast();
+        if (node == _firstNode) RemoveFirst();
+        else if (node == _lastNode) RemoveLast();
         else
         {
-            node.Previous.Next = node.Next;
-            node.Next.Previous = node.Previous;
+            var previous = node.Previous;
+            var next = node.Next;
+
+            previous.Next = next;
+            next.Previous = previous;
+
+            _count--;
         }
 
         return true;
@@ -227,23 +234,18 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
         {
             current = current is null ? _firstNode : current.Next;
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
             yield return current.Value;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
     }
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-        // FIXME: do the same methods for GetEnumerator | for distinct both
         LinkedListNode<T>? current = null;
         for (int i = 0; i < _count; i++)
         {
             current = current is null ? _firstNode : current.Next;
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
             yield return current.Value;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
     }
 }
