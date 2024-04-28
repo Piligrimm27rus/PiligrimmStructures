@@ -53,6 +53,52 @@ public class LinkedList
         expect.Should().BeEquivalentTo(actual);
         Assert.Equal(expect.Length, actual.Count);
     }
+    
+
+    [Fact]
+    private void RemoveFirst_RemoveFirstItemToBeEmptyThenAdd_ListWasEmptyAndThenOrderCorrect()
+    {
+        int[] input = [0];
+        var actual = new LinkedList<int>(input);
+
+        actual.RemoveFirst();
+        actual.Should().BeEmpty();
+        actual.Add(0);
+        actual.Should().NotBeEmpty();
+
+        var actualForward = LinkedListToList(actual);
+        var actualReversed = LinkedListToList(actual, false);
+
+        int[] expectForward = Enumerable.Range(0, 1).ToArray();
+        int[] expectReversed = expectForward.Reverse().ToArray();
+
+        expectForward.Should().BeEquivalentTo(actualForward);
+        expectReversed.Should().BeEquivalentTo(actualReversed);
+
+        Assert.Equal(expectForward.Length, actualForward.Count);
+    }
+
+    [Fact]
+    private void RemoveLast_RemoveLastItemToBeEmptyThenAdd_ListWasEmptyAndThenOrderCorrect()
+    {
+        var actual = new LinkedList<int>(0);
+
+        actual.RemoveLast();
+        actual.Should().BeEmpty();
+        actual.Add(0);
+        actual.Should().NotBeEmpty();
+
+        var actualForward = LinkedListToList(actual);
+        var actualReversed = LinkedListToList(actual, false);
+
+        int[] expectForward = Enumerable.Range(0, 1).ToArray();
+        int[] expectReversed = expectForward.Reverse().ToArray();
+
+        expectForward.Should().BeEquivalentTo(actualForward);
+        expectReversed.Should().BeEquivalentTo(actualReversed);
+
+        Assert.Equal(expectForward.Length, actualForward.Count);
+    }
 
     [Fact]
     private void RemoveLast_ChangeLastNodeToYesterday_RemovedLastNode()

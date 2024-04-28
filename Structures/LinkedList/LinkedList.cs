@@ -129,10 +129,7 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
         for (int i = _count; i > 0; i--)
         {
             current = current == null ? _lastNode : current.Previous;
-            if (item.Equals(current.Value))
-            {
-                return current;
-            }
+            if (item.Equals(current.Value)) return current;
         }
 
         return null;
@@ -149,6 +146,7 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
             current = current == null ? _firstNode : current.Next;
             if (item.Equals(current.Value)) return current;
         }
+
         return null;
     }
 
@@ -187,15 +185,33 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
 
     public void RemoveLast()
     {
-        _lastNode = _lastNode.Previous;
-        _lastNode.Next = null;
+        if (_count == 0) return;
+        if (_count == 1)
+        {
+            _firstNode = _lastNode = null;
+        }
+        else
+        {
+            _lastNode = _lastNode.Previous;
+            _lastNode.Next = null;
+        }
+
         _count--;
     }
 
     public void RemoveFirst()
     {
-        _firstNode = _firstNode.Next;
-        _firstNode.Previous = null;
+        if (_count == 0) return;
+        if (_count == 1)
+        {
+            _firstNode = _lastNode = null;
+        }
+        else
+        {
+            _firstNode = _firstNode.Next;
+            _firstNode.Previous = null;
+        }
+
         _count--;
     }
 
