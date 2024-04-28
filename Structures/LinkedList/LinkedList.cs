@@ -126,11 +126,12 @@ public class LinkedList<T> : ICollection<T>, IEnumerable<T>, ICollection, IEnume
 
         LinkedListNode<T>? current = null;
 
-        for (int i = _count; i > 0; i--)
+        do
         {
             current = current == null ? _lastNode : current.Previous;
             if (item.Equals(current.Value)) return current;
         }
+        while (current != null);
 
         return null;
     }
