@@ -1,4 +1,4 @@
-namespace Piligrimm.Stask.Tests;
+namespace Piligrimm.Structures.Tests;
 
 public class StaskTests
 {

@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Piligrimm;
+namespace Piligrimm.Structures;
 
 public class List<T> : IEnumerable<T>, ICollection<T>
 {
@@ -67,14 +67,14 @@ public class List<T> : IEnumerable<T>, ICollection<T>
 
     public void CopyTo(T[] array, int arrayIndex)
     {
-        if (array.Length < _array.Length)
+        if (array.Length < _count)
             throw new ArgumentException("CopyTo method. Destination array was not long enough.");
         
-        if (array.Length < arrayIndex || _array.Length < arrayIndex)
+        if (array.Length < arrayIndex || _count < arrayIndex)
             throw new ArgumentException("CopyTo method. Destination index was long enough then array length.");
 
 
-        for (int i = 0; i < _array.Length; i++)
+        for (int i = 0; i < _count; i++)
         {
             array[arrayIndex + i] = _array[i];
         }

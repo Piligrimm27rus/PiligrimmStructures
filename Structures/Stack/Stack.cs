@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Piligrimm;
+namespace Piligrimm.Structures;
 
 public class Stack<T> : IEnumerable<T>, ICollection
 {
