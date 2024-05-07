@@ -1,5 +1,3 @@
-using FluentAssertions;
-
 namespace Piligrimm.Structures.Tests;
 
 public class QueueTests
