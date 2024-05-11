@@ -24,12 +24,12 @@ public class Dictionary<K, V> : ICollection, IEnumerable
         {
             if (key is null)
                 throw new ArgumentNullException("Key is null");
-            System.Console.WriteLine($"key - {key} - {key.GetHashCode()}");
+
             int index = Math.Abs(key.GetHashCode()) % _array.Length;
             var pair = _array[index]?.FirstOrDefault(pairs => key.Equals(pairs.Key));
 
             if (pair is null)
-                throw new ArgumentException("Key isn't exists");
+                throw new KeyNotFoundException("Key isn't exists");
 
             return pair.Value;
         }
@@ -46,9 +46,9 @@ public class Dictionary<K, V> : ICollection, IEnumerable
             var pair = _array[index].FirstOrDefault(pairs => key.Equals(pairs.Key));
 
             if (pair is null)
-                throw new ArgumentException("Key isn't exists");
-
-            pair.Value = value;
+                _array[index].Add(new KeyValuePair<K, V>(key, value));
+            else
+                pair.Value = value;
         }
     }
 
@@ -56,7 +56,6 @@ public class Dictionary<K, V> : ICollection, IEnumerable
     {
         if (key is null)
             throw new ArgumentNullException("Key is null");
-            System.Console.WriteLine($"key - {key} - {key.GetHashCode()}");
 
         int index = Math.Abs(key.GetHashCode()) % _array.Length;
 
@@ -69,15 +68,15 @@ public class Dictionary<K, V> : ICollection, IEnumerable
             }
         }
 
-        if (_count + 1 > _array.Length)
-            Recreate();
-
         if (_array[index] is null)
             _array[index] = new List<KeyValuePair<K, V>>();
 
         _array[index].Add(new KeyValuePair<K, V>(key, value));
 
         _count++;
+
+        if (_count > _array.Length)
+            Recreate();
     }
 
     private void Recreate()
@@ -96,6 +95,57 @@ public class Dictionary<K, V> : ICollection, IEnumerable
                     Add(pairs.Key, pairs.Value);
     }
 
+    public bool TryGetValue(K key, out V value)
+    {
+        if (key is null)
+            throw new ArgumentNullException("Key is null");
+
+        value = default;
+
+        int index = Math.Abs(key.GetHashCode()) % _array.Length;
+
+        if (_array[index] is not null)
+        {
+            var pair = _array[index].FirstOrDefault(pair => key.Equals(pair.Key));
+            if (pair is not null)
+            {
+                value = pair.Value;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool ContainsKey(K key)
+    {
+        if (key is null)
+            throw new ArgumentNullException("Key is null");
+
+        int index = Math.Abs(key.GetHashCode()) % _array.Length;
+        if (_array[index] is not null)
+        {
+            return _array[index].Any(pair => key.Equals(pair.Key));
+        }
+
+        return false;
+    }
+
+    public void Remove(K key)
+    {
+        if (key is null)
+            throw new ArgumentNullException("Key is null");
+
+        int index = Math.Abs(key.GetHashCode()) % _array.Length;
+
+        if (_array[index] is not null)
+        {
+            var pair = _array[index].FirstOrDefault(pairs => key.Equals(pairs.Key));
+            if (pair is not null)
+                _array[index].Remove(pair);
+        }
+    }
+
     public void CopyTo(Array array, int index)
     {
         for (int i = 0; i < _array.Length; i++)
@@ -108,27 +158,5 @@ public class Dictionary<K, V> : ICollection, IEnumerable
             if (list is not null)
                 foreach (var items in list)
                     yield return items;
-    }
-}
-
-internal class HashHelper
-{
-    public static ReadOnlySpan<int> Primes =>
-    [
-        3, 7, 11, 17, 23, 29, 37, 47, 59, 71, 89, 107, 131, 163, 197, 239, 293, 353, 431, 521, 631, 761, 919,
-        1103, 1327, 1597, 1931, 2333, 2801, 3371, 4049, 4861, 5839, 7013, 8419, 10103, 12143, 14591,
-        17519, 21023, 25229, 30293, 36353, 43627, 52361, 62851, 75431, 90523, 108631, 130363, 156437,
-        187751, 225307, 270371, 324449, 389357, 467237, 560689, 672827, 807403, 968897, 1162687, 1395263,
-        1674319, 2009191, 2411033, 2893249, 3471899, 4166287, 4999559, 5999471, 7199369
-    ];
-
-    public static int NextPrime(int prime)
-    {
-        for (int i = 0; i < Primes.Length; i++)
-        {
-            if (Primes[i] > prime)
-                return Primes[i];
-        }
-        return -1;
     }
 }
