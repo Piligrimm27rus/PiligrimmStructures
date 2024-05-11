@@ -23,9 +23,9 @@ catch (ArgumentException)
     Console.WriteLine("An element with Key = \"txt\" already exists.");
 }
 
-// // The Item property is another name for the indexer, so you
-// // can omit its name when accessing elements.
-// Console.WriteLine("For key = \"rtf\", value = {0}.", openWith["rtf"]);
+// The Item property is another name for the indexer, so you
+// can omit its name when accessing elements.
+Console.WriteLine("For key = \"rtf\", value = {0}.", openWith["rtf"]);
 
 // // The indexer can be used to change the value associated
 // // with a key.

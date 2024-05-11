@@ -18,15 +18,37 @@ public class Dictionary<K, V> : ICollection, IEnumerable
         _array = new List<KeyValuePair<K, V>>[HashHelper.Primes[0]];
     }
 
-    public V this[int index]
+    public V this[K key]
     {
         get
         {
-            return _array[0][0].Value;
+            if (key is null)
+                throw new ArgumentNullException("Key is null");
+            System.Console.WriteLine($"key - {key} - {key.GetHashCode()}");
+            int index = Math.Abs(key.GetHashCode()) % _array.Length;
+            var pair = _array[index]?.FirstOrDefault(pairs => key.Equals(pairs.Key));
+
+            if (pair is null)
+                throw new ArgumentException("Key isn't exists");
+
+            return pair.Value;
         }
         set
         {
-            _array[0][0].Value = default;
+            if (key is null)
+                throw new ArgumentNullException("Key is null");
+
+            int index = Math.Abs(key.GetHashCode()) % _array.Length;
+
+            if (_array[index] is null)
+                _array[index] = new List<KeyValuePair<K, V>>();
+
+            var pair = _array[index].FirstOrDefault(pairs => key.Equals(pairs.Key));
+
+            if (pair is null)
+                throw new ArgumentException("Key isn't exists");
+
+            pair.Value = value;
         }
     }
 
@@ -34,6 +56,7 @@ public class Dictionary<K, V> : ICollection, IEnumerable
     {
         if (key is null)
             throw new ArgumentNullException("Key is null");
+            System.Console.WriteLine($"key - {key} - {key.GetHashCode()}");
 
         int index = Math.Abs(key.GetHashCode()) % _array.Length;
 
@@ -69,16 +92,14 @@ public class Dictionary<K, V> : ICollection, IEnumerable
 
         foreach (var list in oldArray)
             if (list is not null)
-                foreach (var items in list)
-                    Add(items.Key, items.Value);
+                foreach (var pairs in list)
+                    Add(pairs.Key, pairs.Value);
     }
 
     public void CopyTo(Array array, int index)
     {
         for (int i = 0; i < _array.Length; i++)
-            if (_array[i] is not null)
-                for (int j = 0; j < _array[i].Count; j++)
-                    array.SetValue(_array[i][j], index + i + j);
+            array.SetValue(_array[i], index + i);
     }
 
     public IEnumerator GetEnumerator()
