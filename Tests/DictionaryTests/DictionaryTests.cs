@@ -57,6 +57,9 @@ public class DictionaryTests
             { "rtf", "wordpad.exe" }
         };
 
+        actual["txt"].Should().Be("notepad.exe");
+        actual["bmp"].Should().Be("paint.exe");
+        actual["dib"].Should().Be("paint.exe");
         actual["rtf"].Should().Be("wordpad.exe");
     }
 
