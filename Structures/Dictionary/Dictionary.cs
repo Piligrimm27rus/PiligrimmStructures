@@ -75,7 +75,7 @@ public class Dictionary<K, V> : ICollection, IEnumerable
 
         _count++;
 
-        if (_count > _array.Length)
+        if (_array[index].Count > 300)
             Recreate();
     }
 
