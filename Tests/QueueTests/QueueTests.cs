@@ -141,4 +141,36 @@ public class QueueTests
 
         actual.Contains("five").Should().BeFalse();
     }
+
+    [Fact]
+    public void Contains_DequeueAndCheckIfContainsInQueue_ReturnFalse1()
+    {
+        string[] input = ["one", "two", "three"];
+        var actual = new Queue<string>(input);
+
+        actual.Dequeue();
+        actual.Dequeue();
+
+        actual.Enqueue("four");
+        actual.Enqueue("five");
+
+        actual.Dequeue();
+        actual.Dequeue();
+
+        actual.Enqueue("six");
+        actual.Enqueue("seven");
+
+        string[] expectFirst = ["five", "six", "seven"];
+
+        expectFirst.Should().BeEquivalentTo(actual);
+        Assert.Equal(expectFirst.Count(), actual.Count);
+
+        actual.Enqueue("eight");
+        actual.Enqueue("nine");
+
+        string[] expectSecond = ["five", "six", "seven", "eight", "nine"];
+
+        expectSecond.Should().BeEquivalentTo(actual);
+        Assert.Equal(expectSecond.Count(), actual.Count);
+    }
 }

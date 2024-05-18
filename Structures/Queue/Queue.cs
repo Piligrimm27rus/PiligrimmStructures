@@ -5,11 +5,13 @@ namespace Piligrimm.Structures;
 public class Queue<T> : IEnumerable<T>, ICollection, IEnumerable
 {
     private T[] _array;
-    private int _capacity = 5; // 5 is default capacity
+    private int _capacity = 5;
     private int _count = 0;
-    private int _current = 0; // value which declare a pointer on value in array
 
-    public int Count => _count - _current;
+    private int _left = 0;
+    private int _right = 0;
+
+    public int Count => _count;
 
     public bool IsSynchronized => throw new NotImplementedException();
     public object SyncRoot => throw new NotImplementedException();
@@ -31,16 +33,23 @@ public class Queue<T> : IEnumerable<T>, ICollection, IEnumerable
     /// <param name="item"> Item </param>
     public void Enqueue(T item)
     {
-        _array[_count] = item;
-        _count++;
+        _array[_right] = item;
 
-        if (_count == _capacity)
+        _count++;
+        _right = ++_right % _capacity;
+
+        if (_right == _left)
         {
             _capacity *= 2;
-            var newArray = new T[_capacity];
+            var newArr = new T[_capacity];
 
-            CopyTo(newArray, 0);
-            _array = newArray;
+            Array.Copy(_array, _left, newArr, 0, (_capacity / 2) - _left);
+            Array.Copy(_array, 0, newArr, (_capacity / 2) - _left, _right);
+
+            _array = newArr;
+
+            _left = 0;
+            _right = _count;
         }
     }
 
@@ -48,54 +57,52 @@ public class Queue<T> : IEnumerable<T>, ICollection, IEnumerable
     /// <returns> T </returns>
     public T? Dequeue()
     {
-        if (_count == 0 || _current >= _count)
+        if (_count == 0 || _left == _right)
             throw new InvalidOperationException("Queue is empty");
 
-        _current++;
+        var item = _array[_left];
+        _array[_left] = default;
 
-        return _array[_current - 1];
+        _left = ++_left % _capacity;
+        _count--;
+
+        return item;
     }
 
     /// <summary> Функция просмотра возвращает самый старый элемент, который находится в начале Queue<T> , но не удаляет его из Queue<T>.  </summary>
     /// <returns> T </returns>
     public T? Peek()
     {
-        if (_count == 0 || _current >= _count)
+        if (_count == 0 || _left == _right)
             throw new InvalidOperationException("Queue is empty");
 
-        return _array[_current];
+        return _array[_left];
     }
 
     public void Clear()
     {
         _array = new T[_capacity];
         _count = 0;
-        _current = 0;
+
+        _right = 0;
+        _left = 0;
     }
 
-    public void CopyTo(Array array, int index)
-    {
-        var queue = GetEnumerator();
-
-        for (int i = 0; queue.MoveNext(); i++)
-        {
-            array.SetValue(queue.Current, index + i);
-        }
-    }
+    public void CopyTo(Array array, int index) => _array.CopyTo(array, index);
 
     public IEnumerator GetEnumerator()
     {
-        for (int i = _current; i < _count; i++)
+        for (int i = 0; i < _count; i++)
         {
-            yield return _array[i];
+            yield return _array[(_left + i) % _capacity];
         }
     }
 
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
     {
-        for (int i = _current; i < _count; i++)
+        for (int i = 0; i < _count; i++)
         {
-            yield return _array[i];
+            yield return _array[(_left + i) % _capacity];
         }
     }
 }
