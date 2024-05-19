@@ -143,7 +143,7 @@ public class QueueTests
     }
 
     [Fact]
-    public void Contains_DequeueAndCheckIfContainsInQueue_ReturnFalse1()
+    public void RecreationInnerStateArray_HeadAndTailOnOtherSides_QueueHasCorrectOrder()
     {
         string[] input = ["one", "two", "three"];
         var actual = new Queue<string>(input);
